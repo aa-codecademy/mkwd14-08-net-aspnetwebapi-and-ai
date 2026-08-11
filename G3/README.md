@@ -2,4 +2,4 @@
 
 ## Contact
 
-* Trainer: trainer@mail.com
+* Trainer: stojanovska_tijana@outlook.com
