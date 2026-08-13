@@ -2,4 +2,4 @@
 
 ## Contact
 
-* Trainer: stojanovska_tijana@outlook.com
+* Trainer: Tijana Stojanovska - stojanovska_tijana@outlook.com
