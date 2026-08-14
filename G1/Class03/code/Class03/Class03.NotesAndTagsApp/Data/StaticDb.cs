@@ -1,4 +1,5 @@
 ﻿using Class03.NotesAndTagsApp.Models;
+using Class03.NotesAndTagsApp.Models.Enums;
 
 namespace Class03.NotesAndTagsApp.Data;
 
@@ -8,32 +9,32 @@ public static class StaticDb
     {
         new Note()
         {
-            Text = "This is my first note",
-            Priority = "High",
+            Text = "Do Homework",
+            Priority = Priority.High,
             Tags = new List<Tag>()
             {
-                new Tag() { Name = "Work", Color = "Red" },
-                new Tag() { Name = "Personal", Color = "Blue" }
+                new Tag() { Name = "HomeWork", Color = "cyan" },
+                new Tag() { Name = "Avenga", Color = "blue" }
             }
         },
         new Note()
         {
-            Text = "This is my second note",
-            Priority = "Medium",
+            Text = "Drink more water",
+            Priority = Priority.Medium,
             Tags = new List<Tag>()
             {
-                new Tag() { Name = "Work", Color = "Red" },
-                new Tag() { Name = "Personal", Color = "Blue" }
+                new Tag() { Name = "Healthy", Color = "orange" },
+                new Tag() { Name = "Priority High", Color = "red" }
             }
         },
         new Note()
         {
-            Text = "This is my third note",
-            Priority = "Low",
+            Text = "Go to the gym",
+            Priority = Priority.Low,
             Tags = new List<Tag>()
             {
-                new Tag() { Name = "Work", Color = "Red" },
-                new Tag() { Name = "Personal", Color = "Blue" }
+                new Tag() { Name = "Exercise", Color = "blue" },
+                new Tag() { Name = "Priority Low", Color = "yellow" }
             }
         }
     };
