@@ -2,4 +2,5 @@
 
 ## Contact
 
-* Trainer: trainer@mail.com
+* Trainer: `Ilija Mitev`
+* Email: `ilija.mitev3@gmail.com`
