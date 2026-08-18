@@ -1,0 +1,6 @@
+@Class03.NotesAndTagsApp_HostAddress = http://localhost:5220
+
+GET {{Class03.NotesAndTagsApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
