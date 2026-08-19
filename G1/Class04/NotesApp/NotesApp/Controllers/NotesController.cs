@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NotesApp.Domain.Enums;
+using NotesApp.Dtos;
 using NotesApp.Services.Interfaces;
 
 namespace NotesApp.Controllers;
@@ -14,6 +16,21 @@ public class NotesController : ControllerBase
         _noteService = noteService;
     }
 
-
+    // GET: /api/notes
+    // GET: /api/notes?priority=High
+    // NOTE: priority is optional
+    [HttpGet]
+    public ActionResult<List<NoteDto>> GetAll([FromQuery] Priority? priority = null)
+    {
+        try
+        {
+            List<NoteDto> result = _noteService.GetAllNotes(priority);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
 
 }

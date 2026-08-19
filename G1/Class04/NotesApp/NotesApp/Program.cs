@@ -12,8 +12,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Register services
 builder.Services.AddScoped<INoteService, NoteService>();
+
+// Register repositories
 builder.Services.AddScoped<INoteRepository, NoteRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
 
 var app = builder.Build();
 
