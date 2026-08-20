@@ -24,7 +24,7 @@ namespace NotesApp.Controllers
             }
         }
 
-        [HttpGet("{index}")] //http://localhost:[port]/api/notes/1 - without the index, the route would be the same as the one above. The path variable is a part of this route - it makes this route unique
+        [HttpGet("/{index}")] //http://localhost:[port]/api/notes/1 - without the index, the route would be the same as the one above. The path variable is a part of this route - it makes this route unique
         public ActionResult<Note> GetByIndex(int index)
         {
             try
