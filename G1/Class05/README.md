@@ -57,12 +57,12 @@ Six projects instead of one. In Visual Studio: right click the solution → Add 
 
 | Project | Contains | References |
 |---|---|---|
-| `Class04.NotesApp` | Controllers, `Program.cs` | Services, Dtos, Domain |
-| `Class04.NotesApp.Services` | `INoteService`, `NoteService`, custom exceptions | Domain, Dtos, DataAccess, Mappers |
-| `Class04.NotesApp.Mappers` | `NoteMapper`, `TagMapper` | Domain, Dtos |
-| `Class04.NotesApp.DataAccess` | `StaticDb`, `IRepository<T>`, repositories | Domain |
-| `Class04.NotesApp.Dtos` | `NoteDto`, `AddNoteDto`, `UpdateNoteDto`, `TagDto` | Domain |
-| `Class04.NotesApp.Domain` | `Note`, `Tag`, `User`, `Priority` | *(nothing)* |
+| `NotesApp` | Controllers, `Program.cs` | Services, Dtos, Domain |
+| `NotesApp.Services` | `INoteService`, `NoteService`, custom exceptions | Domain, Dtos, DataAccess, Mappers |
+| `NotesApp.Mappers` | `NoteMapper`, `TagMapper` | Domain, Dtos |
+| `NotesApp.DataAccess` | `StaticDb`, `IRepository<T>`, repositories | Domain |
+| `NotesApp.Dtos` | `NoteDto`, `AddNoteDto`, `UpdateNoteDto`, `TagDto` | Domain |
+| `NotesApp.Domain` | `Note`, `Tag`, `User`, `Priority` | *(nothing)* |
 
 Look at the last row. **The Domain project references nothing.** It is the centre of the
 application and it does not know that HTTP, JSON or SQL exist. That is a good sign.
@@ -89,6 +89,12 @@ public abstract class BaseEntity
     public int Id { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime UpdatedDate { get; set; }
+
+    protected BaseEntity()
+    {
+        CreatedDate = DateTime.UtcNow;
+        UpdatedDate = DateTime.UtcNow;
+    }
 }
 
 public class Note : BaseEntity
@@ -102,20 +108,6 @@ public class Note : BaseEntity
     public List<Tag> Tags { get; set; } = new List<Tag>();
 }
 ```
-
-Two new things compared to Class 3:
-
-1. **Everything has an `Id`.** Without one you cannot say "update *that* note".
-   We pulled it into a `BaseEntity` so we write it once.
-2. **`UserId` and `User` together.** `UserId` is how a *database* points at a row.
-   `User` is how an *object* points at another object. In future Entity Framework
-   will use both and keep them in sync for us.
-
-> **Why `= string.Empty;`?**
-> Our projects have `<Nullable>enable</Nullable>` turned on. The compiler warns you
-> when a non-nullable `string` could be `null`. Giving it a default value is the simplest
-> honest answer. `User?` has a question mark because a note really might not have its
-> user loaded yet.
 
 ---
 
@@ -385,28 +377,6 @@ Two details worth stealing for your own APIs:
   is ambiguous, so we answer 400 instead of guessing.
 
 ---
-
-## Homework 📝
-
-Extend the Notes API with a **Tags** end-to-end implementation, following the exact same
-path through the layers:
-
-1. `TagDto`, `AddTagDto`, `UpdateTagDto` in the Dtos project.
-2. Finish `TagRepository` - the `Add`, `Update` and `Delete` methods currently throw
-   `NotImplementedException`. Give `StaticDb` a tag id counter.
-3. `ITagService` + `TagService` with validation:
-   - `Name` is required, maximum 30 characters
-   - `Color` is required
-   - two tags cannot have the same `Name`
-   - a tag that is used by at least one note **cannot be deleted** (409 Conflict)
-4. `TagsController` with the full set: GET all, GET by id, POST, PUT, DELETE.
-
-**Rules:**
-- The controller may not contain a single business rule.
-- The service may not mention `IActionResult` or any status code.
-- No `new TagRepository()` anywhere - register it in `Program.cs`.
-
-**Bonus:** add `GET /api/notes/{id}/tags`. Which controller should it live in, and why?
 
 ### 🤖 Let's Ask AI
 
