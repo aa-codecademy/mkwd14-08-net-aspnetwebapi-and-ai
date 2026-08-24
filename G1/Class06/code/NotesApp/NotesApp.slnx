@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="NotesApp.DataAccess/NotesApp.DataAccess.csproj" />
+  <Project Path="NotesApp.Domain/NotesApp.Domain.csproj" />
+  <Project Path="NotesApp.Dtos/NotesApp.Dtos.csproj" Id="4a9252ff-958a-40f8-b155-40be091c0c87" />
+  <Project Path="NotesApp.Mappers/NotesApp.Mappers.csproj" Id="ae5a0d55-3b9c-481c-af7a-070800c39608" />
+  <Project Path="NotesApp.Services/NotesApp.Services.csproj" />
+  <Project Path="NotesApp/NotesApp.csproj" />
+</Solution>
