@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using NotesApp.DataAccess.Data;
 using NotesApp.DataAccess.Implementations;
 using NotesApp.DataAccess.Interfaces;
 using NotesApp.Services.Implementations;
@@ -5,17 +7,20 @@ using NotesApp.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Register services
+// ===> Register the database
+// AddDbContext makes the DbContext Scoped: a fresh one per HTTP request.
+// Never a singleton - a DbContext remembers the objects it loaded, so sharing
+// one would leak data between requests.
+builder.Services.AddDbContext<NotesAppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("NotesAppDb")));
+
+// ===> Register services
 builder.Services.AddScoped<INoteService, NoteService>();
 
-// Register repositories
+// ===> Register repositories
 builder.Services.AddScoped<INoteRepository, NoteRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();

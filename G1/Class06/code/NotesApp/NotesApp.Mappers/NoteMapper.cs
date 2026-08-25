@@ -14,7 +14,7 @@ public static class NoteMapper
             Priority = note.Priority,
             UserFullName = note.User is null
                 ? "Unknown"
-                : $"{note.User.FirstName} {note.User.LastName}",
+                : note.User.FullName,
             Tags = note.Tags.ToTagDtoList()
         };
     }
