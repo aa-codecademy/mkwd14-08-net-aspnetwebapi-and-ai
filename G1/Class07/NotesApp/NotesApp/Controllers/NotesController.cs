@@ -21,11 +21,11 @@ public class NotesController : ControllerBase
     // GET: /api/notes?priority=1 (1,2 or 3)
     // NOTE: priority is optional
     [HttpGet]
-    public ActionResult<List<NoteDto>> GetAll([FromQuery] Priority? priority = null)
+    public async Task<ActionResult<List<NoteDto>>> GetAll([FromQuery] Priority? priority = null)
     {
         try
         {
-            List<NoteDto> result = _noteService.GetAllNotes(priority);
+            List<NoteDto> result = await _noteService.GetAllNotesAsync(priority);
             return Ok(result);
         }
         catch (Exception ex)
@@ -37,11 +37,11 @@ public class NotesController : ControllerBase
 
     // GET /api/notes/1
     [HttpGet("{id:int}")]
-    public ActionResult<NoteDto> GetById(int id)
+    public async Task<ActionResult<NoteDto>> GetById(int id)
     {
         try
         {
-            NoteDto noteDto = _noteService.GetNoteById(id);
+            NoteDto noteDto = await _noteService.GetNoteByIdAsync(id);
             return Ok(noteDto);
         }
         catch (NoteNotFoundException ex)
@@ -56,11 +56,11 @@ public class NotesController : ControllerBase
 
     // POST /api/notes
     [HttpPost]
-    public ActionResult<NoteDto> Create([FromBody] AddNoteDto noteDto)
+    public async Task<ActionResult<NoteDto>> Create([FromBody] AddNoteDto noteDto)
     {
         try
         {
-            NoteDto createdDto = _noteService.AddNote(noteDto);
+            NoteDto createdDto = await _noteService.AddNoteAsync(noteDto);
 
             return Ok(createdDto);
             //return CreatedAtAction(nameof(GetById), new { id = noteDto.Id }, noteDto);

@@ -5,7 +5,7 @@ namespace NotesApp.Services.Interfaces;
 
 public interface INoteService
 {
-    List<NoteDto> GetAllNotes(Priority? priority = null);
-    NoteDto GetNoteById(int id);
-    NoteDto AddNote(AddNoteDto addNoteDto);
+    Task<List<NoteDto>> GetAllNotesAsync(Priority? priority = null);
+    Task<NoteDto> GetNoteByIdAsync(int id);
+    Task<NoteDto> AddNoteAsync(AddNoteDto addNoteDto);
 }

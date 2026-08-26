@@ -24,10 +24,11 @@ public class NoteService : INoteService
         _tagRepository = tagRepository;
     }
 
-    public List<NoteDto> GetAllNotes(Priority? priority = null)
+    public async Task<List<NoteDto>> GetAllNotesAsync(Priority? priority = null)
     {
         // 1) Get all notes from db
-        List<Note> notesDb = _noteRepository.GetAll();
+        var notesDbTask = _noteRepository.GetAllAsync();
+        List<Note> notesDb = await notesDbTask;
 
         // Optional filter
         if (priority.HasValue)
@@ -41,9 +42,9 @@ public class NoteService : INoteService
         return noteDtos;
     }
 
-    public NoteDto GetNoteById(int id)
+    public async Task<NoteDto> GetNoteByIdAsync(int id)
     {
-        Note? noteDb = _noteRepository.GetById(id);
+        Note? noteDb = await _noteRepository.GetByIdAsync(id);
 
         if (noteDb is null)
         {
@@ -53,18 +54,18 @@ public class NoteService : INoteService
         return noteDb.ToNoteDto();
     }
 
-    public NoteDto AddNote(AddNoteDto addNoteDto)
+    public async Task<NoteDto> AddNoteAsync(AddNoteDto addNoteDto)
     {
         // 1) Validate
         ValidateText(addNoteDto.Text);
 
-        User user = _userRepository.GetById(addNoteDto.UserId);
+        User? user = await _userRepository.GetByIdAsync(addNoteDto.UserId);
         if (user is null)
         {
-            throw new UserNotFoundException($"User with id {user.Id} does not exist."); 
+            throw new UserNotFoundException($"User with id {addNoteDto.UserId} does not exist."); 
         }
 
-        List<Tag> tags = _tagRepository.GetByIds(addNoteDto.TagIds);
+        List<Tag> tags = await _tagRepository.GetByIdsAsync(addNoteDto.TagIds);
 
         // 2) Map
         Note newNote = addNoteDto.ToNote();
@@ -72,7 +73,7 @@ public class NoteService : INoteService
         newNote.User = user;
 
         // 3) Save
-        _noteRepository.Add(newNote);
+        await _noteRepository.AddAsync(newNote);
 
         return newNote.ToNoteDto();
     }
