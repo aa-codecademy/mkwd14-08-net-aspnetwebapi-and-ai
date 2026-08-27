@@ -52,7 +52,7 @@ public class NoteRepository : INoteRepository
 
     public async Task UpdateAsync(Note entity)
     {
-        //_context.Notes.Update(entity);
+        //_context.Notes.Update(entity); // this is needed if the entity is not tracked by the context
         await _context.SaveChangesAsync();
     }
 

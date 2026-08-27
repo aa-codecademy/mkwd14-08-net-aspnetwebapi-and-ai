@@ -36,4 +36,11 @@ public static class NoteMapper
             UserId = addNoteDto.UserId,
         };
     }
+
+    public static void ApplyTo(this UpdateNoteDto updateNoteDto, Note existingNote)
+    {
+        existingNote.Text = updateNoteDto.Text;
+        existingNote.Priority = updateNoteDto.Priority;
+        existingNote.UpdatedDate = DateTime.UtcNow;
+    }
 }

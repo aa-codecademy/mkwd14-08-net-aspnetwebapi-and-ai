@@ -58,6 +58,7 @@ public class NoteService : INoteService
     {
         // 1) Validate
         ValidateText(addNoteDto.Text);
+        ValidatePriority(addNoteDto.Priority);
 
         User? user = await _userRepository.GetByIdAsync(addNoteDto.UserId);
         if (user is null)
@@ -78,6 +79,41 @@ public class NoteService : INoteService
         return newNote.ToNoteDto();
     }
 
+    public async Task UpdateNoteAsync(UpdateNoteDto updateNoteDto)
+    {
+        // 1) Validate
+        Note? noteDb = await _noteRepository.GetByIdAsync(updateNoteDto.Id);
+
+        if (noteDb is null)
+        {
+            throw new NoteNotFoundException($"Note with id {updateNoteDto.Id} was not found.");
+        }
+
+        ValidateText(updateNoteDto.Text);
+        ValidatePriority(updateNoteDto.Priority);
+
+        List<Tag> tags = await _tagRepository.GetByIdsAsync(updateNoteDto.TagIds);
+
+        // 2) Map
+        updateNoteDto.ApplyTo(noteDb);
+        noteDb.Tags = tags;
+
+        // 3) Save
+        await _noteRepository.UpdateAsync(noteDb);
+    }
+
+    public async Task DeleteNoteAsync(int id)
+    {
+        Note? noteDb = await _noteRepository.GetByIdAsync(id);
+
+        if (noteDb is null)
+        {
+            throw new NoteNotFoundException($"Note with id {id} was not found.");
+        }
+
+        await _noteRepository.DeleteAsync(noteDb);
+    }
+
     #region Private helpers
 
     private void ValidateText(string text)
@@ -90,6 +126,16 @@ public class NoteService : INoteService
         if (text.Length > 100)
         {
             throw new NoteDataException("Text cannot contain more than 100 characters.");
+        }
+    }
+
+    private static void ValidatePriority(Priority priority)
+    {
+        // An enum is just a number underneath, so "priority": 42 binds happily.
+        // We have to check it ourselves.
+        if (!Enum.IsDefined(priority))
+        {
+            throw new NoteDataException($"Priority '{priority}' is not a valid value.");
         }
     }
 

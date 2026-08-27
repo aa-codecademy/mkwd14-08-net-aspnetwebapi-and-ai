@@ -80,5 +80,52 @@ public class NotesController : ControllerBase
 
     }
 
+    // PUT /api/notes/
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody] UpdateNoteDto updateNoteDto)
+    {
+        try
+        {
+            await _noteService.UpdateNoteAsync(updateNoteDto);
+
+            // 204: it worked, and there is nothing worth sending back.
+            return NoContent();
+        }
+        catch (NoteNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (NoteDataException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                value: "An error occurred, please contact the administrator.",
+                statusCode: StatusCodes.Status500InternalServerError);
+        }
+    }
+
+    // DELETE /api/notes/1
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        try
+        {
+            await _noteService.DeleteNoteAsync(id);
+            return NoContent();
+        }
+        catch (NoteNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                value: "An error occurred, please contact the administrator.",
+                statusCode: StatusCodes.Status500InternalServerError);
+        }
+    }
 
 }
