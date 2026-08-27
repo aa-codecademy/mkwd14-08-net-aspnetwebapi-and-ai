@@ -1,0 +1,6 @@
+@NotesAppDataAnnotaions_HostAddress = http://localhost:5207
+
+GET {{NotesAppDataAnnotaions_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
