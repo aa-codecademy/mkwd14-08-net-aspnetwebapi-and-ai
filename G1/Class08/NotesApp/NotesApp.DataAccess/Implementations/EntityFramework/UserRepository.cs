@@ -3,7 +3,7 @@ using NotesApp.DataAccess.Data;
 using NotesApp.DataAccess.Interfaces;
 using NotesApp.Domain.Models;
 
-namespace NotesApp.DataAccess.Implementations;
+namespace NotesApp.DataAccess.Implementations.EntityFramework;
 
 public class UserRepository : IUserRepository
 {

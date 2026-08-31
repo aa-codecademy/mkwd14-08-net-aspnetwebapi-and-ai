@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NotesApp.DataAccess.Data;
-using NotesApp.DataAccess.Implementations;
+using NotesApp.DataAccess.Implementations.EntityFramework;
 using NotesApp.DataAccess.Interfaces;
 using NotesApp.Services.Implementations;
 using NotesApp.Services.Interfaces;
