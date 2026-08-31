@@ -72,6 +72,23 @@ public class NoteRepositoryAdoNet : INoteRepository
         return notes.FirstOrDefault();
     }
 
+    public async Task<List<Note>> GetByIdsAsync(List<int> ids)
+    {
+        List<Note> notes = new List<Note>();
+
+        foreach (int id in ids)
+        {
+            Note? note = await GetByIdAsync(id);
+
+            if (note is not null)
+            {
+                notes.Add(note);
+            }
+        }
+
+        return notes;
+    }
+
     public async Task AddAsync(Note entity)
     {
         using SqlConnection connection = new SqlConnection(_connectionString);
