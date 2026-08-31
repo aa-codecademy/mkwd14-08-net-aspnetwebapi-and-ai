@@ -7,10 +7,16 @@ using System.Data;
 
 namespace NotesApp.DataAccess.Implementations.AdoNet;
 
+// ADO.NET is a low-level data access technology that allows you to interact with databases using SQL commands and ADO.NET objects. It provides a set of classes in the System.Data namespace that enable you to connect to a database, execute commands, and retrieve results.
+
+// SqlConnection => used to establish a connection to a SQL Server database
+// SqlCommand => execute SQL queries, stored procedures, and other database commands
+// SqlDataReader => read data from a database
 public class NoteRepositoryAdoNet : INoteRepository
 {
     private readonly string _connectionString;
 
+    // The IConfiguration interface is part of the Microsoft.Extensions.Configuration namespace and is used to access configuration settings in .NET applications. It provides a way to retrieve configuration values from various sources, such as appsettings.json, environment variables, command-line arguments, and more.
     public NoteRepositoryAdoNet(IConfiguration configuration)
     {
         _connectionString = configuration.GetConnectionString("NotesAppDb") ?? throw new InvalidOperationException("Connection string 'NotesAppDb' not found.");

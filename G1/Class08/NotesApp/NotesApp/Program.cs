@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using NotesApp.DataAccess.Data;
+using NotesApp.DataAccess.Implementations.AdoNet;
+using NotesApp.DataAccess.Implementations.Dapper;
 using NotesApp.DataAccess.Implementations.EntityFramework;
 using NotesApp.DataAccess.Interfaces;
 using NotesApp.Services.Implementations;
@@ -21,7 +23,9 @@ builder.Services.AddDbContext<NotesAppDbContext>(options => options.UseSqlServer
 builder.Services.AddScoped<INoteService, NoteService>();
 
 // ===> Register repositories
-builder.Services.AddScoped<INoteRepository, NoteRepository>();
+//builder.Services.AddScoped<INoteRepository, NoteRepository>(); // EF Core
+//builder.Services.AddScoped<INoteRepository, NoteRepositoryAdoNet>(); // ADO.NET
+builder.Services.AddScoped<INoteRepository, NoteRepositoryDapper>(); // Dapper 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 
