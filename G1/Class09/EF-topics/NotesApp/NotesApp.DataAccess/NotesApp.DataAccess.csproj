@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NotesApp.Domain\NotesApp.Domain.csproj" />
+    <ProjectReference Include="..\NotesApp.Dtos\NotesApp.Dtos.csproj" />
   </ItemGroup>
 
 </Project>

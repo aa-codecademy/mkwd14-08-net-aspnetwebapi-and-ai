@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using NotesApp.DataAccess.Interfaces;
 using NotesApp.Domain.Enums;
 using NotesApp.Domain.Models;
+using NotesApp.Dtos;
 using System.Data;
 
 namespace NotesApp.DataAccess.Implementations.AdoNet;
@@ -249,6 +250,11 @@ public class NoteRepositoryAdoNet : INoteRepository
 
             await command.ExecuteNonQueryAsync();
         }
+    }
+
+    public Task<List<NoteDto>> GetAllByPriorityAsync(Priority? priority = null)
+    {
+        throw new NotImplementedException();
     }
     #endregion
 }

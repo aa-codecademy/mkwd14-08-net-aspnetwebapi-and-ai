@@ -23,9 +23,9 @@ builder.Services.AddDbContext<NotesAppDbContext>(options => options.UseSqlServer
 builder.Services.AddScoped<INoteService, NoteService>();
 
 // ===> Register repositories
-//builder.Services.AddScoped<INoteRepository, NoteRepository>(); // EF Core
+builder.Services.AddScoped<INoteRepository, NoteRepository>(); // EF Core
 //builder.Services.AddScoped<INoteRepository, NoteRepositoryAdoNet>(); // ADO.NET
-builder.Services.AddScoped<INoteRepository, NoteRepositoryDapper>(); // Dapper 
+//builder.Services.AddScoped<INoteRepository, NoteRepositoryDapper>(); // Dapper 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 

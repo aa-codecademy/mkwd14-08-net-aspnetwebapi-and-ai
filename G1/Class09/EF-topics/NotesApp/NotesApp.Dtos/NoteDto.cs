@@ -9,5 +9,7 @@ namespace NotesApp.Dtos
         public Priority Priority { get; set; }
         public string UserFullName { get; set; }
         public List<TagDto> Tags { get; set; } = new();
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
     }
 }

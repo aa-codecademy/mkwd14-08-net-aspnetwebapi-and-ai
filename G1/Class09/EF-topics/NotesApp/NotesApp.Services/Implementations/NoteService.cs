@@ -26,15 +26,15 @@ public class NoteService : INoteService
 
     public async Task<List<NoteDto>> GetAllNotesAsync(Priority? priority = null)
     {
-        // 1) Get all notes from db
-        var notesDbTask = _noteRepository.GetAllAsync();
-        List<Note> notesDb = await notesDbTask;
-
         // Optional filter
         if (priority.HasValue)
         {
-            notesDb = notesDb.Where(note => note.Priority == priority).ToList();
+            return await _noteRepository.GetAllByPriorityAsync(priority.Value);
         }
+
+        // 1) Get all notes from db
+        var notesDbTask = _noteRepository.GetAllAsync();
+        List<Note> notesDb = await notesDbTask;
 
         // 2) Map notes from db to dto
         List<NoteDto> noteDtos = notesDb.ToNoteDtoList();

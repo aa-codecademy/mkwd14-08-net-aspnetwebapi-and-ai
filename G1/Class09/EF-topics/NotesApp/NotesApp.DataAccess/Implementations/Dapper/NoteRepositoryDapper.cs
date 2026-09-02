@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using NotesApp.DataAccess.Interfaces;
 using NotesApp.Domain.Enums;
 using NotesApp.Domain.Models;
+using NotesApp.Dtos;
 
 namespace NotesApp.DataAccess.Implementations.Dapper;
 
@@ -179,5 +180,10 @@ public class NoteRepositoryDapper : INoteRepository
             splitOn: "Id,Id");
 
         return notesById.Values.ToList();
+    }
+
+    public Task<List<NoteDto>> GetAllByPriorityAsync(Priority? priority = null)
+    {
+        throw new NotImplementedException();
     }
 }
