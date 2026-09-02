@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="LibraryApi.DataAccess/LibraryApi.DataAccess.csproj" />
+  <Project Path="LibraryApi.Domain/LibraryApi.Domain.csproj" />
+  <Project Path="LibraryApi.Dtos/LibraryApi.Dtos.csproj" />
+  <Project Path="LibraryApi.Mappers/LibraryApi.Mappers.csproj" />
+  <Project Path="LibraryApi.Services/LibraryApi.Services.csproj" />
+  <Project Path="LibraryApi/LibraryApi.csproj" />
+</Solution>
