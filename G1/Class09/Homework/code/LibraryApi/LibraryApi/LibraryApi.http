@@ -1,0 +1,46 @@
+@HostAddress = https://localhost:7205
+
+### Ticket 1 - all books (check pageCount)
+GET {{HostAddress}}/api/books
+Accept: application/json
+
+### Ticket 1 - one book
+GET {{HostAddress}}/api/books/1
+Accept: application/json
+
+### Ticket 2 - books of author 1 (check authorFullName)
+GET {{HostAddress}}/api/books/by-author/1
+Accept: application/json
+
+### Ticket 3 - create a book (check the id you get back)
+POST {{HostAddress}}/api/books
+Content-Type: application/json
+
+{
+  "title": "Burmese Days",
+  "isbn": "9780156148504",
+  "year": 1934,
+  "pageCount": 300,
+  "genre": 1,
+  "authorId": 1
+}
+
+### Ticket 4 - update book 1, then GET it again
+PUT {{HostAddress}}/api/books
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "Nineteen Eighty-Four",
+  "isbn": "9780451524935",
+  "year": 1949,
+  "pageCount": 328,
+  "genre": 1
+}
+
+### Ticket 5 (bonus) - books published in 1949 or later
+GET {{HostAddress}}/api/books?minYear=1949
+Accept: application/json
+
+### Delete a book
+DELETE {{HostAddress}}/api/books/9
