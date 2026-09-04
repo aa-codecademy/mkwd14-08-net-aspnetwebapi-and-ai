@@ -31,7 +31,10 @@ public class NotesController : ControllerBase
         catch (Exception ex)
         {
             // Logging...
-            return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred, please contact the administrator.");
+            return Problem(
+                detail: "An error occurred, please contact the administrator.",
+                statusCode: StatusCodes.Status500InternalServerError
+            );
         }
     }
 
@@ -46,11 +49,17 @@ public class NotesController : ControllerBase
         }
         catch (NoteNotFoundException ex)
         {
-            return NotFound(ex.NoteMessage);
+            return Problem(
+                detail: ex.NoteMessage,
+                statusCode: StatusCodes.Status404NotFound
+            );
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred, please contact the administrator.");
+            return Problem(
+                detail: "An error occurred, please contact the administrator.",
+                statusCode: StatusCodes.Status500InternalServerError
+            );
         }
     }
 
@@ -67,15 +76,24 @@ public class NotesController : ControllerBase
         }
         catch (UserNotFoundException ex)
         {
-            return BadRequest(ex.Message);
+            return Problem(
+                detail: ex.Message,
+                statusCode: StatusCodes.Status400BadRequest
+            );
         }
         catch (NoteDataException ex)
         {
-            return BadRequest(ex.Message);
+            return Problem(
+                detail: ex.Message,
+                statusCode: StatusCodes.Status400BadRequest
+            );
         }
         catch (Exception)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred, please contact the administrator.");
+            return Problem(
+                detail: "An error occurred, please contact the administrator.",
+                statusCode: StatusCodes.Status500InternalServerError
+            );
         }
 
     }
@@ -93,10 +111,14 @@ public class NotesController : ControllerBase
         }
         catch (NoteNotFoundException e)
         {
+            // => return Problem vs return NotFound
+            // 1) Problem is more flexible, it can carry a detail message, and it can be extended to carry a traceId, a link to documentation, etc.
+            // 2) It offers a more consistent way to return errors for the entire API
             return Problem(
                 detail: e.NoteMessage,
                 statusCode: StatusCodes.Status404NotFound
             );
+            //return NotFound(e.NoteMessage);
         }
         catch (NoteDataException e)
         {
@@ -125,13 +147,17 @@ public class NotesController : ControllerBase
         }
         catch (NoteNotFoundException e)
         {
-            return NotFound(e.Message);
+            return Problem(
+                detail: e.Message,
+                statusCode: StatusCodes.Status404NotFound
+            );
         }
         catch (Exception)
         {
-            return StatusCode(
-                value: "An error occurred, please contact the administrator.",
-                statusCode: StatusCodes.Status500InternalServerError);
+            return Problem(
+                detail: "An error occurred, please contact the administrator.",
+                statusCode: StatusCodes.Status500InternalServerError
+            );
         }
     }
 
