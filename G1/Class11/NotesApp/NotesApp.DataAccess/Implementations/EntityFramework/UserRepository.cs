@@ -49,4 +49,8 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<bool> CheckUsernameExistsAsync(string username)
+    {
+        return await _context.Users.AnyAsync(u => u.Username == username);
+    }
 }

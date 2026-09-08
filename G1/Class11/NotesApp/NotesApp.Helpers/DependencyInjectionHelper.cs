@@ -20,5 +20,6 @@ public static class DependencyInjectionHelper
     public static void AddApplicationServices(this IServiceCollection services)
     {
         services.AddScoped<INoteService, NoteService>();
+        services.AddScoped<IAuthService, AuthService>();
     }
 }
