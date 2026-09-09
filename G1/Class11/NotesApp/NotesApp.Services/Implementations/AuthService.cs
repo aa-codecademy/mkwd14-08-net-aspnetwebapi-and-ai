@@ -1,6 +1,7 @@
 ﻿using NotesApp.DataAccess.Interfaces;
 using NotesApp.Domain.Models;
 using NotesApp.Dtos;
+using NotesApp.Mappers;
 using NotesApp.Services.CustomExceptions;
 using NotesApp.Services.Interfaces;
 
@@ -30,28 +31,21 @@ public class AuthService : IAuthService
 
         // 3) Hash the password
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password);
+        // The hashing algorithm used is BCrypt, which is a widely used and secure hashing algorithm for passwords.
+        // It automatically handles salting and is designed to be slow to mitigate brute-force attacks.
+        // Same password twice => two different hashes, thanks to the random salt generated for each hash.
         // "SuperSecret123" => $2a$11$IL1LwfXd72Z/Vw6vPxpghO/.h/ZTauAf75DGVuY1LuMka/iRW3Ezy
 
+        // In relation to SHA algorithms, BCrypt is generally considered more secure for password hashing because it is specifically designed for that purpose. SHA algorithms (like SHA-256) are fast and not suitable for password hashing as they can be brute-forced more easily. BCrypt's slowness and built-in salting make it a better choice for securely storing passwords.
+
         // 4) Map to User
-        User newUser = new User
-        {
-            FirstName = registerDto.FirstName,
-            LastName = registerDto.LastName,
-            Username = registerDto.Username,
-            Password = passwordHash
-        };
+        User newUser = registerDto.ToUser(passwordHash);
 
         // 5) Save the new User
         await _userRepository.AddAsync(newUser);
 
         // 6) Return the UserDto
-        return new UserDto
-        {
-            Id = newUser.Id,
-            FirstName = registerDto.FirstName,
-            LastName = registerDto.LastName,
-            Username = newUser.Username,
-        };
+        return newUser.ToUserDto();
     }
 
     private void ValidateRegistration(RegisterDto registerDto)
