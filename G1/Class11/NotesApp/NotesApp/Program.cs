@@ -1,14 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using NotesApp.DataAccess.Data;
 using NotesApp.Helpers;
-using NotesApp.Services.Implementations;
-using NotesApp.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// ===> Configure the JWT authentication
+builder.Services.AddJwtAuthentication(builder.Configuration);
 
 // ===> Register the database
 // AddDbContext makes the DbContext Scoped: a fresh one per HTTP request.

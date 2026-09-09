@@ -1,7 +1,9 @@
-﻿using NotesApp.DataAccess.Interfaces;
+﻿using Microsoft.Extensions.Options;
+using NotesApp.DataAccess.Interfaces;
 using NotesApp.Domain.Models;
 using NotesApp.Dtos;
 using NotesApp.Mappers;
+using NotesApp.Services.Configuration;
 using NotesApp.Services.CustomExceptions;
 using NotesApp.Services.Interfaces;
 
@@ -10,10 +12,14 @@ namespace NotesApp.Services.Implementations;
 public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
+    private readonly JwtSettings _jwtSettings;
 
-    public AuthService(IUserRepository userRepository)
+    public AuthService(
+        IUserRepository userRepository,
+        IOptions<JwtSettings> jwtSettings)
     {
         _userRepository = userRepository;
+        _jwtSettings = jwtSettings.Value;
     }
 
     public async Task<UserDto> RegisterAsync(RegisterDto registerDto)
