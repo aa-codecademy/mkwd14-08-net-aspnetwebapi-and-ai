@@ -1,0 +1,166 @@
+{
+  "info": {
+    "name": "Class11 - Notes API",
+    "description": "One request per endpoint of the Notes API.\n\nHOW TO USE\n1. Run the API (F5 in Visual Studio, or `dotnet run --launch-profile https`).\n2. Send `POST Login` first - its test script saves the JWT into the {{token}} variable.\n3. Every request in the Notes folder then works: the collection sends `Authorization: Bearer {{token}}` for you.\n\nSSL: if Postman shows a certificate error, either turn off Settings -> General -> SSL certificate verification, or change {{baseUrl}} to http://localhost:5136.\n\nSeeded logins: bob / SuperSecret123 and petko / AlsoSecret456.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:7144",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Both actions are [AllowAnonymous] - you cannot be logged in before you log in, so they override the collection auth to 'No Auth'.",
+      "item": [
+        {
+          "name": "POST register",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Ana\",\n  \"lastName\": \"Anevska\",\n  \"username\": \"ana\",\n  \"password\": \"AnaPassword1\",\n  \"confirmPassword\": \"AnaPassword1\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "201 Created. The response is a UserDto - there is no password on it, so the hash cannot leak. Change the username if you send it twice, it has a unique index."
+          }
+        },
+        {
+          "name": "POST login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Save the JWT so the Notes folder can use it.",
+                  "if (pm.response.code === 200) {",
+                  "    pm.collectionVariables.set(\"token\", pm.response.json().token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"bob\",\n  \"password\": \"SuperSecret123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "200 OK with the token. Paste it into jwt.io to see the claims we put in it."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notes",
+      "description": "The whole controller is [Authorize]. Send POST login first, or every request here answers 401.",
+      "item": [
+        {
+          "name": "GET all notes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/notes?priority=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notes"],
+              "query": [
+                {
+                  "key": "priority",
+                  "value": "1",
+                  "disabled": true,
+                  "description": "Optional: 1 = Low, 2 = Medium, 3 = High. Tick it to filter."
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET note by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/notes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notes", "1"]
+            }
+          }
+        },
+        {
+          "name": "POST note",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Prepare the Class 11 workshop\",\n  \"priority\": 3,\n  \"userId\": 1,\n  \"tagIds\": [1, 2]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notes"]
+            },
+            "description": "Seeded users: 1 = bob, 2 = petko. Seeded tags: 1 Homework, 2 Avenga, 3 Healthy, 4 Exercise, 5 Urgent."
+          }
+        },
+        {
+          "name": "PUT note",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"text\": \"Do Homework - updated\",\n  \"priority\": 2,\n  \"tagIds\": [1]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notes"]
+            },
+            "description": "204 No Content. The id travels in the body, not in the route."
+          }
+        },
+        {
+          "name": "DELETE note",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/notes/3",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notes", "3"]
+            },
+            "description": "204 No Content."
+          }
+        }
+      ]
+    }
+  ]
+}

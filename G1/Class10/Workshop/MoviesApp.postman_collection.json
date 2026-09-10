@@ -1,0 +1,348 @@
+{
+  "info": {
+    "name": "Class09 - Movies API (Workshop)",
+    "description": "Every endpoint from the workshop contract, plus the failure cases from the Definition of Done. Set the {{baseUrl}} variable to whatever your API is listening on.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:7001",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Movies",
+      "item": [
+        {
+          "name": "1. GET all movies -> 200",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/movies", "host": ["{{baseUrl}}"], "path": ["api", "movies"] }
+          }
+        },
+        {
+          "name": "2. GET movies filtered by genre + year -> 200",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/movies?genreId=3&year=2010",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "movies"],
+              "query": [
+                { "key": "genreId", "value": "3" },
+                { "key": "year", "value": "2010" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "2b. GET movies filtered by title -> 200",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/movies?title=the",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "movies"],
+              "query": [{ "key": "title", "value": "the" }]
+            }
+          }
+        },
+        {
+          "name": "2c. GET movies, filter matches nothing -> 200 + empty list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/movies?year=1899",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "movies"],
+              "query": [{ "key": "year", "value": "1899" }]
+            }
+          }
+        },
+        {
+          "name": "3. GET movie by id -> 200 (genre, director and actors as names)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/movies/1", "host": ["{{baseUrl}}"], "path": ["api", "movies", "1"] }
+          }
+        },
+        {
+          "name": "3b. GET movie 999 -> 404",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/movies/999", "host": ["{{baseUrl}}"], "path": ["api", "movies", "999"] }
+          }
+        },
+        {
+          "name": "4. POST movie -> 201 + Location header",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Reservoir Dogs\",\n  \"description\": \"A jewel heist goes wrong.\",\n  \"year\": 1992,\n  \"durationMinutes\": 99,\n  \"genreId\": 4,\n  \"directorId\": 3,\n  \"actorIds\": [4, 5]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/movies", "host": ["{{baseUrl}}"], "path": ["api", "movies"] }
+          }
+        },
+        {
+          "name": "4b. POST movie, empty title / no year / no genre -> 400",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/movies", "host": ["{{baseUrl}}"], "path": ["api", "movies"] }
+          }
+        },
+        {
+          "name": "4c. POST movie, genreId 999 -> 400",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Nonexistent Genre\",\n  \"year\": 2020,\n  \"durationMinutes\": 90,\n  \"genreId\": 999,\n  \"actorIds\": []\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/movies", "host": ["{{baseUrl}}"], "path": ["api", "movies"] }
+          }
+        },
+        {
+          "name": "4d. POST movie, unknown actorIds -> 400 (names the ids)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Ghost Cast\",\n  \"year\": 2020,\n  \"durationMinutes\": 90,\n  \"genreId\": 1,\n  \"actorIds\": [42, 99]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/movies", "host": ["{{baseUrl}}"], "path": ["api", "movies"] }
+          }
+        },
+        {
+          "name": "4e. POST movie, 300-character description -> 400",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Too Long\",\n  \"description\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\n  \"year\": 2020,\n  \"durationMinutes\": 90,\n  \"genreId\": 1,\n  \"actorIds\": []\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/movies", "host": ["{{baseUrl}}"], "path": ["api", "movies"] }
+          }
+        },
+        {
+          "name": "5. PUT movie 9 -> 204",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Reservoir Dogs (remastered)\",\n  \"description\": \"A jewel heist goes wrong.\",\n  \"year\": 1992,\n  \"durationMinutes\": 99,\n  \"genreId\": 4,\n  \"directorId\": 3,\n  \"actorIds\": [4, 5]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/movies/9", "host": ["{{baseUrl}}"], "path": ["api", "movies", "9"] }
+          }
+        },
+        {
+          "name": "5b. PUT movie 999 -> 404",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Nope\",\n  \"year\": 2000,\n  \"durationMinutes\": 90,\n  \"genreId\": 1,\n  \"actorIds\": []\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/movies/999", "host": ["{{baseUrl}}"], "path": ["api", "movies", "999"] }
+          }
+        },
+        {
+          "name": "6. DELETE movie 9 -> 204",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/movies/9", "host": ["{{baseUrl}}"], "path": ["api", "movies", "9"] }
+          }
+        },
+        {
+          "name": "6b. DELETE movie 999 -> 404",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/movies/999", "host": ["{{baseUrl}}"], "path": ["api", "movies", "999"] }
+          }
+        },
+        {
+          "name": "15. POST cast actor 2 into movie 1 -> 204 (again -> 409)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/movies/1/actors/2",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "movies", "1", "actors", "2"]
+            }
+          }
+        },
+        {
+          "name": "16. DELETE actor 2 from movie 1 -> 204 (again -> 404)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/movies/1/actors/2",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "movies", "1", "actors", "2"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Genres",
+      "item": [
+        {
+          "name": "7. GET all genres -> 200 + movie counts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/genres", "host": ["{{baseUrl}}"], "path": ["api", "genres"] }
+          }
+        },
+        {
+          "name": "8. POST genre -> 201",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Horror\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/genres", "host": ["{{baseUrl}}"], "path": ["api", "genres"] }
+          }
+        },
+        {
+          "name": "8b. POST duplicate genre -> 409",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Comedy\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/genres", "host": ["{{baseUrl}}"], "path": ["api", "genres"] }
+          }
+        },
+        {
+          "name": "9. DELETE genre still in use -> 409",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/genres/1", "host": ["{{baseUrl}}"], "path": ["api", "genres", "1"] }
+          }
+        },
+        {
+          "name": "9b. DELETE unused genre -> 204 (use the id from request 8)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/genres/5", "host": ["{{baseUrl}}"], "path": ["api", "genres", "5"] }
+          }
+        },
+        {
+          "name": "9c. DELETE genre 999 -> 404",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/genres/999", "host": ["{{baseUrl}}"], "path": ["api", "genres", "999"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Directors",
+      "item": [
+        {
+          "name": "10. GET all directors -> 200",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/directors", "host": ["{{baseUrl}}"], "path": ["api", "directors"] }
+          }
+        },
+        {
+          "name": "11. GET director 2 with movies -> 200",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/directors/2", "host": ["{{baseUrl}}"], "path": ["api", "directors", "2"] }
+          }
+        },
+        {
+          "name": "11b. GET director 999 -> 404",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/directors/999", "host": ["{{baseUrl}}"], "path": ["api", "directors", "999"] }
+          }
+        },
+        {
+          "name": "12. POST director -> 201 + Location header",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Greta\",\n  \"lastName\": \"Gerwig\",\n  \"dateOfBirth\": \"1983-08-04\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/directors", "host": ["{{baseUrl}}"], "path": ["api", "directors"] }
+          }
+        },
+        {
+          "name": "12b. POST director with no last name -> 400",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"firstName\": \"Greta\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/directors", "host": ["{{baseUrl}}"], "path": ["api", "directors"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Actors",
+      "item": [
+        {
+          "name": "13. GET all actors -> 200",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/actors", "host": ["{{baseUrl}}"], "path": ["api", "actors"] }
+          }
+        },
+        {
+          "name": "13b. GET actors of movie 1 -> 200",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/actors?movieId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "actors"],
+              "query": [{ "key": "movieId", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "14. POST actor -> 201 + Location header",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"firstName\": \"Margot\",\n  \"lastName\": \"Robbie\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/actors", "host": ["{{baseUrl}}"], "path": ["api", "actors"] }
+          }
+        }
+      ]
+    }
+  ]
+}
