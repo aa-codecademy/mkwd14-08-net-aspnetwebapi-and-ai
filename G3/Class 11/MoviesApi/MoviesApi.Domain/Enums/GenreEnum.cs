@@ -1,4 +1,4 @@
-﻿namespace MoviesApi.Models.Enums
+﻿namespace MoviesApi.Domain.Enums
 {
     public enum GenreEnum
     {

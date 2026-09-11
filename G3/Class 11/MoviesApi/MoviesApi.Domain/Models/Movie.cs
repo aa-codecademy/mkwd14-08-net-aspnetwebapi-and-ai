@@ -1,6 +1,6 @@
-﻿using MoviesApi.Models.Enums;
+﻿using MoviesApi.Domain.Enums;
 
-namespace MoviesApi.Models
+namespace MoviesApi.Domain.Models
 {
     public class Movie : BaseEntity
     {
@@ -8,5 +8,9 @@ namespace MoviesApi.Models
         public string? Description { get; set; }
         public int Year { get; set; }
         public GenreEnum Genre { get; set; }
+        public byte[]? Image {  get; set; }
+
+        public int UserId { get; set; }
+        public User User { get; set; }
     }
 }

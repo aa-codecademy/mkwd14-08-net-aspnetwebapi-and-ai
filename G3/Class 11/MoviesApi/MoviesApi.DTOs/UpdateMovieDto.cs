@@ -1,6 +1,7 @@
-﻿using MoviesApi.Models.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using MoviesApi.Domain.Enums;
 
-namespace MoviesApi.Models.DTOs
+namespace MoviesApi.DTOs
 {
     public class UpdateMovieDto
     {
@@ -9,5 +10,6 @@ namespace MoviesApi.Models.DTOs
         public string? Description { get; set; }
         public int Year { get; set; }
         public GenreEnum Genre { get; set; }
+        public IFormFile? Image { get; set; }
     }
 }
