@@ -1,0 +1,279 @@
+# Mocking and Fake Objects 🧪
+
+## Looking Back
+
+In the previous lesson, we learned how to write unit tests using the Arrange–Act–Assert pattern and how to organize tests using .NET testing frameworks.
+
+However, real applications rarely work in isolation. Services often depend on databases, repositories, APIs, or other services.
+
+In this lesson, we'll learn how to test these services without relying on real external dependencies.
+
+---
+
+# Why Do We Need Mocking? 🔶
+
+Imagine we have a service that depends on a repository.
+
+```text
+NoteService
+      │
+      ▼
+NoteRepository
+      │
+      ▼
+ Database
+```
+
+If we use the real repository during a unit test:
+
+- A database may be required.
+- Tests become slower.
+- Tests become harder to maintain.
+- External failures can break the tests.
+
+Unit tests should focus only on the logic we want to test.
+
+Instead of using real dependencies, we replace them with fake ones.
+
+---
+
+### 🤖 Let's Ask AI
+
+```text
+Why shouldn't unit tests use a real database?
+```
+
+```text
+Explain dependency isolation in unit testing.
+```
+
+```text
+What problems can occur when unit tests depend on external systems?
+```
+
+---
+
+# Fake Objects 🔶
+
+A **Fake** is a simple implementation of a dependency that behaves similarly to the real one.
+
+Instead of reading data from a database, a fake object usually stores data in memory.
+
+For example:
+
+- FakeUserRepository
+- FakeNoteRepository
+
+These repositories return predefined data that makes testing predictable. :contentReference[oaicite:0]{index=0}
+
+---
+
+### Advantages of Fake Objects
+
+- Simple to understand
+- No database required
+- Fast execution
+- Easy to debug
+- Good for learning and small projects
+
+---
+
+### 🤖 Let's Ask AI
+
+```text
+Explain what a Fake object is.
+```
+
+```text
+What's the difference between a real repository and a fake repository?
+```
+
+```text
+When are fake objects a good choice?
+```
+
+---
+
+# Testing with Fake Repositories 🔶
+
+Once fake repositories are created, they can be injected into the service being tested.
+
+Instead of communicating with a real database, the service works entirely with in-memory data.
+
+This allows us to verify the business logic without worrying about infrastructure.
+
+The original course materials demonstrate this approach using:
+
+- `FakeUserRepository`
+- `FakeNoteRepository`
+- `NoteTests`
+
+:contentReference[oaicite:1]{index=1}
+
+> Keep the original code examples from the README below this section.
+
+---
+
+### 🤖 Let's Ask AI
+
+```text
+Explain how fake repositories help unit testing.
+```
+
+```text
+Generate another unit test using the fake repositories.
+```
+
+```text
+What are the limitations of fake repositories?
+```
+
+---
+
+# Mocking 🔶
+
+Writing fake implementations manually can become repetitive as projects grow.
+
+Instead of creating fake classes ourselves, we can use a **mocking framework**.
+
+A mocking framework creates objects that simulate the behavior of real dependencies.
+
+One of the most popular libraries in the .NET ecosystem is **Moq**. :contentReference[oaicite:2]{index=2}
+
+---
+
+### What Can a Mock Do?
+
+A mock can:
+
+- Return predefined values.
+- Simulate exceptions.
+- Verify whether a method was called.
+- Verify how many times it was called.
+- Simulate different scenarios without modifying production code.
+
+---
+
+### 🤖 Let's Ask AI
+
+```text
+What is mocking in unit testing?
+```
+
+```text
+Why is Moq commonly used in .NET?
+```
+
+```text
+Explain the difference between Fake objects and Mocks.
+```
+
+---
+
+# Mocking with Moq 🔶
+
+With Moq, developers configure the behavior of dependencies instead of implementing them manually.
+
+Typical operations include:
+
+- `Setup()` – define expected behavior.
+- `Returns()` – specify returned values.
+- `Callback()` – execute additional logic.
+- `Verify()` – confirm that methods were invoked.
+
+These features allow tests to remain isolated while providing full control over dependency behavior. :contentReference[oaicite:3]{index=3}
+
+---
+
+### 🤖 Let's Ask AI
+
+```text
+Explain Setup(), Returns(), and Verify() in Moq.
+```
+
+```text
+Generate a simple Moq example for a repository.
+```
+
+```text
+Show me how to mock a service dependency.
+```
+
+---
+
+# Tests Using Mock Objects 🔶
+
+After configuring the mocked repositories, they can be injected into the service exactly like real implementations.
+
+The business logic remains unchanged, while the dependencies are fully controlled by the test.
+
+The original course materials include examples that demonstrate testing a service using mocked repositories with **Moq**. :contentReference[oaicite:4]{index=4}
+
+> Keep the original `MockHelper` and `NoteTestsMoq` code examples exactly as they appear in the README.
+
+---
+
+### 🤖 Let's Ask AI
+
+```text
+Generate another unit test using Moq.
+```
+
+```text
+Explain this mocked unit test step by step.
+```
+
+```text
+How can I verify that a repository method was called exactly once?
+```
+
+---
+
+# Fake vs Mock 🔶
+
+| Fake | Mock |
+|------|------|
+| Custom implementation | Generated by a mocking framework |
+| Usually stores data in memory | Behavior is configured during the test |
+| Simple and easy to understand | More flexible |
+| Good for smaller projects | Preferred for larger applications |
+
+Both approaches are valid and are commonly used depending on the project requirements.
+
+---
+
+### 🤖 Let's Ask AI
+
+```text
+Compare Fake objects and Mocks.
+```
+
+```text
+When should I use a Fake instead of a Mock?
+```
+
+```text
+What are the advantages of Moq over fake implementations?
+```
+
+---
+
+# Summary
+
+In this lesson we learned:
+
+- Why dependencies should be isolated during unit testing.
+- What Fake objects are.
+- How Fake repositories simplify testing.
+- What mocking is.
+- How Moq helps create mock objects.
+- The differences between Fake objects and Mocks.
+
+---
+
+# Extra Materials 📘
+
+- https://code-maze.com/using-moq-to-determine-if-method-is-called/
+- https://github.com/devlooped/moq
+- https://learn.microsoft.com/dotnet/core/testing/
+- https://martinfowler.com/articles/mocksArentStubs.html
