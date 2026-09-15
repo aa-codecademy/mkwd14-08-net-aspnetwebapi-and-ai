@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NotesApp.Domain.Enums;
-using NotesApp.Domain.Models;
 using NotesApp.Dtos;
 using NotesApp.Helpers;
 using NotesApp.Services.CustomExceptions;
@@ -54,6 +53,10 @@ public class NotesController : ControllerBase
         {
             NoteDto noteDto = await _noteService.GetNoteByIdAsync(id, User.GetUserId());
             return Ok(noteDto);
+        }
+        catch (NoteAccessDeniedException ex)
+        {
+            return Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden);
         }
         catch (NoteNotFoundException ex)
         {
@@ -167,6 +170,10 @@ public class NotesController : ControllerBase
                 detail: e.Message,
                 statusCode: StatusCodes.Status404NotFound
             );
+        }
+        catch (NoteAccessDeniedException ex)
+        {
+            return Problem(detail: ex.Message, statusCode: StatusCodes.Status403Forbidden);
         }
         catch (Exception)
         {
