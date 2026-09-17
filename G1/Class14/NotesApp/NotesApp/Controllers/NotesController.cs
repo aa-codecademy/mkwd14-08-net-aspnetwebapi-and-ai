@@ -14,10 +14,14 @@ namespace NotesApp.Controllers;
 public class NotesController : ControllerBase
 {
     private readonly INoteService _noteService;
+    private readonly ILogger<NotesController> _logger;
 
-    public NotesController(INoteService noteService)
+    public NotesController(
+        INoteService noteService, 
+        ILogger<NotesController> logger)
     {
         _noteService = noteService;
+        _logger = logger;
     }
 
     // GET: /api/notes
@@ -37,7 +41,8 @@ public class NotesController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Logging...
+            _logger.LogError(ex, "Unexpected error while reading notes");
+
             return Problem(
                 detail: "An error occurred, please contact the administrator.",
                 statusCode: StatusCodes.Status500InternalServerError

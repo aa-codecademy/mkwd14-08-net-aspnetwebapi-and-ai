@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
 using NotesApp.DataAccess.Interfaces;
 using NotesApp.Domain.Enums;
 using NotesApp.Domain.Models;
@@ -24,6 +25,7 @@ public class NoteServiceTests
     private Mock<INoteRepository> _noteRepositoryMock;
     private Mock<IUserRepository> _userRepositoryMock;
     private Mock<ITagRepository> _tagRepositoryMock;
+    private Mock<ILogger<NoteService>> _logger;
 
     private NoteService _noteService;
 
@@ -35,11 +37,13 @@ public class NoteServiceTests
         _noteRepositoryMock = new Mock<INoteRepository>();
         _userRepositoryMock = new Mock<IUserRepository>();
         _tagRepositoryMock = new Mock<ITagRepository>();
+        _logger = new Mock<ILogger<NoteService>>();
 
         _noteService = new NoteService(
             _noteRepositoryMock.Object,
             _userRepositoryMock.Object,
-            _tagRepositoryMock.Object
+            _tagRepositoryMock.Object,
+            _logger.Object
         );
     }
 
