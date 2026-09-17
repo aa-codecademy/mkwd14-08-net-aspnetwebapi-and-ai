@@ -1,8 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using NotesApp.DataAccess.Data;
 using NotesApp.Helpers;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// ===> Configuring Serilog
+// Log.Logger is the ONE globally shared logger - the whole configuration is in LoggingHelper.
+// UseSerilog() then replaces the built-in logging providers with Serilog, so an injected ILogger<NoteService> ends up writing through it.
+Log.Logger = LoggingConfigurationHelper.CreateSerilogLogger();
+builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

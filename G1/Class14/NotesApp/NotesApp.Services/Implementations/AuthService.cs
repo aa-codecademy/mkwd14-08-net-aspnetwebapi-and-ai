@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NotesApp.DataAccess.Interfaces;
 using NotesApp.Domain.Models;
@@ -17,13 +18,16 @@ public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
     private readonly JwtSettings _jwtSettings;
+    private readonly ILogger<AuthService> _logger;
 
     public AuthService(
         IUserRepository userRepository,
-        IOptions<JwtSettings> jwtSettings)
+        IOptions<JwtSettings> jwtSettings,
+        ILogger<AuthService> logger)
     {
         _userRepository = userRepository;
         _jwtSettings = jwtSettings.Value;
+        _logger = logger;
     }
 
     public async Task<UserDto> RegisterAsync(RegisterDto registerDto)
@@ -99,11 +103,16 @@ public class AuthService : IAuthService
         // BCrypt automatically handles the salt and the hashing algorithm, so we just need to call Verify with the plain password and the hashed password from the database.
         if (userDb is null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, userDb.Password))
         {
+            _logger.LogWarning("Failed login attempt for username {Username}", loginDto.Username);
             throw new InvalidCredentialsException("Username or password is incorrect.");
         }
 
+        //_logger.LogInformation("User {Username} (id {UserId}) logged in", userDb.Username, userDb.Id);
+
         // 4) Generate token, once the credentials are verified.
         string token = GenerateToken(userDb);
+
+        _logger.LogInformation("User {Username} (id {UserId}) logged in", userDb.Username, userDb.Id);
 
         // The token will be used for authentication in subsequent requests so we return it to the client in the response.
         return new LoginResponseDto

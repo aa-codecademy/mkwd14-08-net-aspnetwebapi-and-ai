@@ -1,4 +1,5 @@
-﻿using NotesApp.DataAccess.Interfaces;
+﻿using Microsoft.Extensions.Logging;
+using NotesApp.DataAccess.Interfaces;
 using NotesApp.Domain.Enums;
 using NotesApp.Domain.Models;
 using NotesApp.Dtos;
@@ -13,19 +14,24 @@ public class NoteService : INoteService
     private readonly INoteRepository _noteRepository;
     private readonly IUserRepository _userRepository;
     private readonly ITagRepository _tagRepository;
+    private readonly ILogger<NoteService> _logger;
 
     public NoteService(
         INoteRepository noteRepository,
         IUserRepository userRepository,
-        ITagRepository tagRepository)
+        ITagRepository tagRepository,
+        ILogger<NoteService> logger)
     {
         _noteRepository = noteRepository;
         _userRepository = userRepository;
         _tagRepository = tagRepository;
+        _logger = logger;
     }
 
     public async Task<List<NoteDto>> GetAllNotesAsync(int userId, Priority? priority = null)
     {
+        _logger.LogDebug("Reading notes for user {UserId}, priority filter {Priority}", userId, priority);
+
         // Optional filter
         if (priority.HasValue)
         {

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NotesApp.Dtos;
 using NotesApp.Services.CustomExceptions;
@@ -13,10 +12,14 @@ namespace NotesApp.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IAuthService authService)
+        public AuthController(
+            IAuthService authService,
+            ILogger<AuthController> logger)
         {
             _authService = authService;
+            _logger = logger;
         }
 
         [AllowAnonymous] // This attribute allows unauthenticated access to this specific action
@@ -72,8 +75,10 @@ namespace NotesApp.Controllers
                     statusCode: StatusCodes.Status400BadRequest
                 );
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occured while logging in username: {Username}", loginDto.Username);
+
                 return Problem(
                     detail: "An error occurred, please contact the administrator.",
                     statusCode: StatusCodes.Status500InternalServerError
