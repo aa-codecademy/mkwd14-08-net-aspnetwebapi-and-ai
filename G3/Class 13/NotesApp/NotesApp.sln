@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35521.163
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotesApp", "NotesApp\NotesApp.csproj", "{197E6795-7A34-4099-870F-2394A4462E49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotesApp.Domain", "NotesApp.Domain\NotesApp.Domain.csproj", "{F1F79A75-4B1B-40A4-903F-957B9E5ACDAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotesApp.DataAccess", "NotesApp.DataAccess\NotesApp.DataAccess.csproj", "{EC902488-8BFF-41DE-B28B-E9600E395AD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotesApp.DTOs", "NotesApp.DTOs\NotesApp.DTOs.csproj", "{6A9397D8-41A9-4CA7-9B69-30FFCACDE5AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotesApp.Services", "NotesApp.Services\NotesApp.Services.csproj", "{A2A0E760-FDA5-46B6-8101-E32DC6192D3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotesApp.Mappers", "NotesApp.Mappers\NotesApp.Mappers.csproj", "{DC38BD54-1116-4359-8CE1-A033D0413782}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{197E6795-7A34-4099-870F-2394A4462E49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{197E6795-7A34-4099-870F-2394A4462E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{197E6795-7A34-4099-870F-2394A4462E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{197E6795-7A34-4099-870F-2394A4462E49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1F79A75-4B1B-40A4-903F-957B9E5ACDAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1F79A75-4B1B-40A4-903F-957B9E5ACDAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1F79A75-4B1B-40A4-903F-957B9E5ACDAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1F79A75-4B1B-40A4-903F-957B9E5ACDAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC902488-8BFF-41DE-B28B-E9600E395AD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC902488-8BFF-41DE-B28B-E9600E395AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC902488-8BFF-41DE-B28B-E9600E395AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC902488-8BFF-41DE-B28B-E9600E395AD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A9397D8-41A9-4CA7-9B69-30FFCACDE5AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A9397D8-41A9-4CA7-9B69-30FFCACDE5AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A9397D8-41A9-4CA7-9B69-30FFCACDE5AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A9397D8-41A9-4CA7-9B69-30FFCACDE5AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2A0E760-FDA5-46B6-8101-E32DC6192D3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2A0E760-FDA5-46B6-8101-E32DC6192D3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2A0E760-FDA5-46B6-8101-E32DC6192D3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2A0E760-FDA5-46B6-8101-E32DC6192D3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC38BD54-1116-4359-8CE1-A033D0413782}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC38BD54-1116-4359-8CE1-A033D0413782}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC38BD54-1116-4359-8CE1-A033D0413782}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC38BD54-1116-4359-8CE1-A033D0413782}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

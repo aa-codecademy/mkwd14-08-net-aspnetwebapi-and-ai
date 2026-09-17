@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MoviesApi.DataAccess\MoviesApi.DataAccess.csproj" />
+    <ProjectReference Include="..\MoviesApi.DTOs\MoviesApi.DTOs.csproj" />
+    <ProjectReference Include="..\MoviesApi.Mappers\MoviesApi.Mappers.csproj" />
+  </ItemGroup>
+
+</Project>
