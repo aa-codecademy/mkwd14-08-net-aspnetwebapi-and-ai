@@ -33,6 +33,18 @@ builder.Services.AddApplicationServices();
 // ===> Register repositories
 builder.Services.AddRepositories();
 
+// ===> CORS 
+const string notesAppWebPolicy = "NotesAppWeb";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(notesAppWebPolicy, policy =>
+    {
+        policy.WithOrigins("http://127.0.0.1:5500", "http://localhost:5500", "https://notesapp.test")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -43,6 +55,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(notesAppWebPolicy);
 
 // The order of middleware is important. Authentication must come before Authorization, otherwise the authorization middleware won't have a user principal to check against and will return a 401 Unauthorized response for all requests, even if the JWT token is valid
 app.UseAuthentication(); // This middleware checks the request for a valid JWT token and sets the user principal if valid

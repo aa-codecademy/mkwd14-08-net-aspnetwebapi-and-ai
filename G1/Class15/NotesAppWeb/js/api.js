@@ -9,15 +9,15 @@ import { API_BASE_URL, TOKEN_KEY } from "./config.js";
 // ===== The token =====
 
 export function saveToken(token) {
-
+    localStorage.setItem(TOKEN_KEY, token);
 }
 
 export function getToken() {
-
+    return localStorage.getItem(TOKEN_KEY);
 }
 
 export function clearToken() {
-
+    localStorage.removeItem(TOKEN_KEY);
 }
 
 // Reads the payload out of the JWT. Base64, not encryption - open any token on
@@ -92,7 +92,48 @@ export class ApiError extends Error {
 
 // anonymous: true marks a call that is allowed to fail with 401 - see below.
 async function apiFetch(path, options = {}) {
+    const token = getToken();
 
+    const headers = { "Content-Type": "application/json", ...options.headers };
+
+    // The same header the Swagger "Authorize" button sends: Bearer <token>.
+    if (token) {
+        headers["Authorization"] = "Bearer " + token;
+    }
+
+    let response;
+
+    try {
+        response = await fetch(API_BASE_URL + path, { ...options, headers });
+    } catch {
+        // fetch only rejects when the request never completed: API not running,
+        // certificate not trusted, or blocked by CORS. A 500 is NOT an error here.
+        throw new ApiError(
+            "Could not reach the API. Is it running, and is " + API_BASE_URL + " trusted in the browser?",
+            0);
+    }
+
+    // 401 means two different things, and the difference is whether we were
+    // logged in. On /api/auth/login it means "wrong password" and the message
+    // belongs on screen; anywhere else it means the token died, and the only
+    // sensible answer is to send them back to the login screen.
+    if (response.status === 401 && !options.anonymous) {
+        clearToken();
+        onSessionExpired();
+
+        throw new ApiError("Your session expired. Please log in again.", 401);
+    }
+
+    if (!response.ok) {
+        throw new ApiError(await readProblemDetail(response), response.status);
+    }
+
+    // 204 No Content has an empty body - response.json() would throw on it.
+    if (response.status === 204) {
+        return null;
+    }
+
+    return await response.json();
 
 }
 
@@ -119,14 +160,51 @@ async function readProblemDetail(response) {
 
 // POST /api/auth/login
 export async function login(username, password) {
+    clearToken();
+    const url = `${API_BASE_URL}/api/auth/login`
 
+    const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
+
+    if (!response.ok) {
+        return;
+    }
+
+    const result = await response.json();
+    console.log(result);
+
+    saveToken(result.token);
 }
 
 // GET /api/notes  /  GET /api/notes?priority=3
 export async function getNotes(priority) {
-    const query = priority ? "?priority=" + priority : "";
+    const query = priority ? `?priority=${priority}` : "";
+    const url = `${API_BASE_URL}/api/notes${query}`;
+    const token = getToken();
 
-    return await apiFetch("/api/notes" + query);
+    if (!token) {
+        return;
+    }
+
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    })
+
+    if (!response.ok) {
+        return;
+    }
+
+    const notes = await response.json();
+
+    return notes;
 }
 
 // POST /api/notes - no userId in the body, the API takes the owner from the token.

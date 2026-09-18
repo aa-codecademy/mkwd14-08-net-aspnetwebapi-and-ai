@@ -2,7 +2,7 @@
 // The one file a student has to edit if their API runs on a different port.
 
 // The Notes API. HTTPS on purpose - see the certificate note in the class plan.
-// export const API_BASE_URL = "https://localhost:7240";
+// export const API_BASE_URL = "https://localhost:7144"; // NotesApp
 export const API_BASE_URL = "https://notesapi.test";
 
 // Where we keep the JWT between page loads. localStorage survives a refresh;
