@@ -1,0 +1,162 @@
+﻿using Microsoft.Extensions.Logging;
+using NotesApp.DataAccess.Interfaces;
+using NotesApp.Domain.Enums;
+using NotesApp.Domain.Models;
+using NotesApp.Dtos;
+using NotesApp.Mappers;
+using NotesApp.Services.CustomExceptions;
+using NotesApp.Services.Interfaces;
+
+namespace NotesApp.Services.Implementations;
+
+public class NoteService : INoteService
+{
+    private readonly INoteRepository _noteRepository;
+    private readonly IUserRepository _userRepository;
+    private readonly ITagRepository _tagRepository;
+    private readonly ILogger<NoteService> _logger;
+
+    public NoteService(
+        INoteRepository noteRepository,
+        IUserRepository userRepository,
+        ITagRepository tagRepository,
+        ILogger<NoteService> logger)
+    {
+        _noteRepository = noteRepository;
+        _userRepository = userRepository;
+        _tagRepository = tagRepository;
+        _logger = logger;
+    }
+
+    public async Task<List<NoteDto>> GetAllNotesAsync(int userId, Priority? priority = null)
+    {
+        _logger.LogDebug("Reading notes for user {UserId}, priority filter {Priority}", userId, priority);
+
+        // Optional filter
+        if (priority.HasValue)
+        {
+            return await _noteRepository.GetAllByPriorityAsync(userId, priority.Value);
+        }
+
+        // 1) Get all notes from db
+        var notesDbTask = _noteRepository.GetAllAsync(userId);
+        List<Note> notesDb = await notesDbTask;
+
+        // 2) Map notes from db to dto
+        List<NoteDto> noteDtos = notesDb.ToNoteDtoList();
+
+        return noteDtos;
+    }
+
+    public async Task<NoteDto> GetNoteByIdAsync(int id, int userId)
+    {
+        Note? noteDb = await _noteRepository.GetByIdAsync(id);
+
+        if (noteDb is null)
+        {
+            throw new NoteNotFoundException($"Note with Id {id} not found.");
+        }
+        EnsureOwner(noteDb, userId);
+
+        return noteDb.ToNoteDto();
+    }
+
+    public async Task<NoteDto> AddNoteAsync(int userId, AddNoteDto addNoteDto)
+    {
+        // 1) Validate
+        ValidateText(addNoteDto.Text);
+        ValidatePriority(addNoteDto.Priority);
+
+        User? user = await _userRepository.GetByIdAsync(userId);
+        if (user is null)
+        {
+            throw new UserNotFoundException($"User with id {userId} does not exist."); 
+        }
+
+        List<Tag> tags = await _tagRepository.GetByIdsAsync(addNoteDto.TagIds);
+
+        // 2) Map
+        Note newNote = addNoteDto.ToNote();
+        newNote.Tags = tags;
+        newNote.UserId = userId;
+        newNote.User = user;
+
+        // 3) Save
+        await _noteRepository.AddAsync(newNote);
+
+        return newNote.ToNoteDto();
+    }
+
+    public async Task UpdateNoteAsync(UpdateNoteDto updateNoteDto, int userId)
+    {
+        // 1) Validate
+        Note? noteDb = await _noteRepository.GetByIdAsync(updateNoteDto.Id);
+
+        if (noteDb is null)
+        {
+            throw new NoteNotFoundException($"Note with id {updateNoteDto.Id} was not found.");
+        }
+
+        EnsureOwner(noteDb, userId);
+        ValidateText(updateNoteDto.Text);
+        ValidatePriority(updateNoteDto.Priority);
+
+        List<Tag> tags = await _tagRepository.GetByIdsAsync(updateNoteDto.TagIds);
+
+        // 2) Map
+        updateNoteDto.ApplyTo(noteDb);
+        noteDb.Tags = tags;
+
+        // 3) Save
+        await _noteRepository.UpdateAsync(noteDb);
+    }
+
+    public async Task DeleteNoteAsync(int id, int userId)
+    {
+        Note? noteDb = await _noteRepository.GetByIdAsync(id);
+
+        if (noteDb is null)
+        {
+            throw new NoteNotFoundException($"Note with id {id} was not found.");
+        }
+
+        EnsureOwner(noteDb, userId);
+        await _noteRepository.DeleteAsync(noteDb);
+    }
+
+    #region Private helpers
+
+    private void ValidateText(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            throw new NoteDataException("Text is a required field.");
+        }
+
+        if (text.Length > 100)
+        {
+            throw new NoteDataException("Text cannot contain more than 100 characters.");
+        }
+    }
+
+    private static void ValidatePriority(Priority priority)
+    {
+        // An enum is just a number underneath, so "priority": 42 binds happily.
+        // We have to check it ourselves.
+        if (!Enum.IsDefined(priority))
+        {
+            throw new NoteDataException($"Priority '{priority}' is not a valid value.");
+        }
+    }
+
+    private static void EnsureOwner(Note note, int userId)
+    {
+        if (note.UserId != userId)
+        {
+            throw new NoteAccessDeniedException($"Note with id {note.Id} does not belong to you.");
+        }
+    }
+
+    #endregion
+
+}

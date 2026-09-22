@@ -1,0 +1,71 @@
+/* Everything Bootstrap does not already give us. Kept short on purpose. */
+
+body {
+    background-color: #f6f7f9;
+}
+
+/* ===== Views =====
+   Every <section class="view"> is in the page from the start. The router adds
+   and removes Bootstrap's .d-none, so exactly one of them is on screen. */
+
+/* ===== Login view ===== */
+
+.login-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+/* .d-none has to beat the display:flex above, hence the !important. */
+.login-view.d-none {
+    display: none !important;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 380px;
+}
+
+.brand-mark {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+/* ===== Note cards ===== */
+
+.note-card {
+    border: 0;
+    border-left: 4px solid transparent;
+    transition: transform .12s ease;
+}
+
+.note-card:hover {
+    transform: translateY(-2px);
+}
+
+/* The number matches the Priority enum: 1 Low, 2 Medium, 3 High. */
+.note-card-1 { border-left-color: #adb5bd; }
+.note-card-2 { border-left-color: #ffc107; }
+.note-card-3 { border-left-color: #dc3545; }
+
+.note-card .card-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* ===== Tag badges ===== */
+
+/* The colour names come from the Tag rows in the database. Anything we do not
+   recognise falls back to the grey below. */
+.tag-badge {
+    background-color: #6c757d;
+    font-weight: 500;
+}
+
+.tag-cyan   { background-color: #0dcaf0; color: #05323a; }
+.tag-blue   { background-color: #0d6efd; }
+.tag-orange { background-color: #fd7e14; }
+.tag-green  { background-color: #198754; }
+.tag-red    { background-color: #dc3545; }
